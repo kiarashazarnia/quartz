@@ -1,20 +1,18 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
-import { SimpleSlug } from "./quartz/util/path"
 
 // components shared across all pages
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
   afterBody: [
-    // blog-style "recent posts" roll, only on the homepage
+    // blog-style "recent notes" roll, only on the homepage
     Component.ConditionalRender({
       component: Component.RecentNotes({
-        title: "Recent Posts",
-        limit: 3,
-        linkToMore: "posts" as SimpleSlug,
+        title: "Recent Notes",
+        limit: 5,
         showTags: true,
-        filter: (f) => f.slug !== undefined && f.slug.startsWith("posts/"),
+        filter: (f) => f.slug !== undefined && f.slug !== "index" && !f.slug.startsWith("tags/"),
       }),
       condition: (page) => page.fileData.slug === "index",
     }),
