@@ -234,6 +234,17 @@ document.addEventListener("nav", async () => {
         tertiaryColor: computedStyleMap["--tertiary"],
         clusterBkg: computedStyleMap["--light"],
         edgeLabelBackground: computedStyleMap["--highlight"],
+        // xychart-beta takes its plot colors from plotColorPalette, not lineColor.
+        // Mermaid's base-theme default starts with #FFF4DD (pale cream), which is
+        // unreadable on a light background — use Quartz theme colors instead.
+        xyChart: {
+          plotColorPalette: [
+            computedStyleMap["--secondary"],
+            computedStyleMap["--tertiary"],
+            computedStyleMap["--darkgray"],
+            computedStyleMap["--gray"],
+          ].join(","),
+        },
       },
     })
 
