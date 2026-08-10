@@ -4,6 +4,14 @@ import { Date, getDate } from "./Date"
 import { QuartzComponent, QuartzComponentProps } from "./types"
 import { GlobalConfiguration } from "../cfg"
 
+function getVersionColor(version: string): string {
+  const v = version.toLowerCase()
+  if (v.includes("alpha")) return "#e74c3c"
+  if (v.includes("beta")) return "#f39c12"
+  if (v.includes("rc")) return "#3498db"
+  return "#27ae60"
+}
+
 export type SortFn = (f1: QuartzPluginData, f2: QuartzPluginData) => number
 
 export function byDateAndAlphabetical(cfg: GlobalConfiguration): SortFn {
@@ -69,6 +77,7 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
       {list.map((page) => {
         const title = page.frontmatter?.title
         const tags = page.frontmatter?.tags ?? []
+        const version = page.frontmatter?.version
 
         return (
           <li class="section-li">
@@ -81,6 +90,11 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
                   <a href={resolveRelative(fileData.slug!, page.slug!)} class="internal">
                     {title}
                   </a>
+                  {version && typeof version === "string" && (
+                    <span class="list-version-badge" style={`background-color: ${getVersionColor(version)}`}>
+                      {version}
+                    </span>
+                  )}
                 </h3>
               </div>
               <ul class="tags">
@@ -106,9 +120,26 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
 PageList.css = `
 .section h3 {
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .section > .tags {
   margin: 0;
+}
+
+.list-version-badge {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-family: var(--codeFont);
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 `

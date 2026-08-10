@@ -8,6 +8,14 @@ import { GlobalConfiguration } from "../cfg"
 import { i18n } from "../i18n"
 import { classNames } from "../util/lang"
 
+function getVersionColor(version: string): string {
+  const v = version.toLowerCase()
+  if (v.includes("alpha")) return "#e74c3c"
+  if (v.includes("beta")) return "#f39c12"
+  if (v.includes("rc")) return "#3498db"
+  return "#27ae60"
+}
+
 interface Options {
   title?: string
   limit: number
@@ -42,6 +50,7 @@ export default ((userOpts?: Partial<Options>) => {
           {pages.slice(0, opts.limit).map((page) => {
             const title = page.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title
             const tags = page.frontmatter?.tags ?? []
+            const version = page.frontmatter?.version
 
             return (
               <li class="recent-li">
@@ -51,6 +60,11 @@ export default ((userOpts?: Partial<Options>) => {
                       <a href={resolveRelative(fileData.slug!, page.slug!)} class="internal">
                         {title}
                       </a>
+                      {version && typeof version === "string" && (
+                        <span class="list-version-badge" style={`background-color: ${getVersionColor(version)}`}>
+                          {version}
+                        </span>
+                      )}
                     </h3>
                   </div>
                   {page.dates && (
